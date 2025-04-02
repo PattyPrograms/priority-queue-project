@@ -1,6 +1,4 @@
-import java.io.*;
 import java.util.*;
-
 /* ResourceManagement
  *
  * Stores the information needed to decide which items to purchase for the given budget and departments
@@ -13,7 +11,7 @@ public class ResourceManagement
   
   /* TO BE COMPLETED BY YOU
    * Fill in your name in the function below
-   */  
+   */
   public static void printName( )
   {
     /* TODO : Fill in your name */
@@ -69,9 +67,34 @@ class Department implements Comparable<Department>
   /* TODO
    * Constructor to build a Department from the information in the given fileName
    */
-  public Department( String fileName ){
-    /* Open the fileName, create items based on the contents, and add those items to itemsDesired */
-  }
+  public Department(String fileName) {
+        itemsDesired = new LinkedList<>();
+        itemsReceived = new LinkedList<>();
+        itemsRemoved = new LinkedList<>();
+        priority = 0.0; // Initially, the department's priority (money spent) is 0.
+
+        try {
+            File file = new File(fileName);
+            Scanner input = new Scanner(file);
+
+            if (input.hasNext()) {
+                name = input.next();  // Read department name
+            }
+
+            while (input.hasNext()) {
+                String itemName = input.next();  // Read item name
+                if (input.hasNextDouble()) {
+                    double itemPrice = input.nextDouble();  // Read item price
+                    itemsDesired.add(new Item(itemName, itemPrice)); // Add item to queue
+                }
+            }
+
+            input.close(); // Close file after reading
+        } catch (Exception e) {
+            System.out.println("Error reading file: " + fileName);
+            e.printStackTrace();
+        }
+    }
   
   /*
    * Compares the data in the given Department to the data in this Department
