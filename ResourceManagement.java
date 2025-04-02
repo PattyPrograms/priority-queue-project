@@ -69,46 +69,47 @@ class Department implements Comparable<Department>
   /* TODO
    * Constructor to build a Department from the information in the given fileName
    */
-  public Department(String fileName) {
+    // Constructor
+    public Department(String fileName) {
         itemsDesired = new LinkedList<>();
         itemsReceived = new LinkedList<>();
         itemsRemoved = new LinkedList<>();
         priority = 0.0; // Initially, the department's priority (money spent) is 0.
 
+        Scanner input = null;
         try {
             File file = new File(fileName);
-            Scanner input = new Scanner(file);
+            input = new Scanner(file);
 
-            if (input.hasNext()) {
-                name = input.next();  // Read department name
+            if (input.hasNextLine()) {
+                name = input.nextLine().trim();  // Read full department name
             }
 
             while (input.hasNext()) {
-                String itemName = input.next();  // Read item name
+                String itemName = input.next();
                 if (input.hasNextDouble()) {
-                    double itemPrice = input.nextDouble();  // Read item price
-                    itemsDesired.add(new Item(itemName, itemPrice)); // Add item to queue
+                    double itemPrice = input.nextDouble();
+                    itemsDesired.add(new Item(itemName, itemPrice));
+                } else {
+                    itemName += " " + input.nextLine();
                 }
             }
-
-            input.close(); // Close file after reading
         } catch (Exception e) {
             System.out.println("Error reading file: " + fileName);
             e.printStackTrace();
+        } finally {
+            if (input != null) {
+                input.close();  // Ensure the file is closed properly
+            }
         }
     }
-  
-  /*
-   * Compares the data in the given Department to the data in this Department
-   * Returns -1 if this Department comes first
-   * Returns 0 if these Departments have equal priority
-   * Returns 1 if the given Department comes first
-   *
-   * This function is to ensure the departments are sorted by the priority when put in the priority queue 
-   */
-  public int compareTo( Department dept ){
-    return this.priority.compareTo( dept.priority );
-  }
+
+    @Override
+    public int compareTo(Department dept) {
+        int priorityComparison = this.priority.compareTo(dept.priority);
+        return (priorityComparison != 0) ? priorityComparison : this.name.compareTo(dept.name);
+    }
+}
 
   public boolean equals( Department dept ){
     return this.name.compareTo( dept.name ) == 0;
